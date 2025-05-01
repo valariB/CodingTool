@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GL Coding Reference Tool</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      font-size: 14px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .item-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .item {
+      background-color: #fff;
+      padding: 10px 12px;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      cursor: pointer;
+      flex: 1 1 calc(33.333% - 20px);
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .summary {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .summary h2 {
+      margin-top: 0;
+    }
+    .summary p {
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GL Coding Reference Tool</h1>
+    <input type="text" id="search" placeholder="Search for an item..." onkeyup="filterItems()">
+    <div class="item-list" id="itemList"></div>
+    <div class="summary" id="summaryCard" style="display: none;">
+      <h2 id="summaryTitle"></h2>
+      <p><strong>GL #:</strong> <span id="glNumber"></span></p>
+      <p><strong>GL Name:</strong> <span id="glName"></span></p>
+      <p><strong>Department:</strong> <span id="department"></span></p>
+      <p><strong>Class:</strong> <span id="className"></span></p>
+      <p><strong>Who Pays:</strong> <span id="whoPays"></span></p>
+      <p><strong>Item Tag/Group:</strong> <span id="itemTag"></span></p>
+    </div>
+  </div>
 
+  <script>
+    const items = [
+      {{
+        "Item": "Shampoo",
+        "GLNumber": 7601,
+        "GLName": "Supplies - Guest Stay Consumable",
+        "Department": "Housekeeping",
+        "Class": "Unassigned Listing - CFL",
+        "WhoPays": "MC",
+        "ItemTagGroup": "GS-Toiletries-Soap/Shampoo/Lotion"
+      }},
+      {{
+        "Item": "Lotion",
+        "GLNumber": 7601,
+        "GLName": "Supplies - Guest Stay Consumable",
+        "Department": "Housekeeping",
+        "Class": "Unassigned Listing - CFL",
+        "WhoPays": "MC",
+        "ItemTagGroup": "GS-Toiletries-Soap/Shampoo/Lotion"
+      }},
+      {{
+        "Item": "Paper Towels - For Guest",
+        "GLNumber": 7601,
+        "GLName": "Supplies - Guest Stay Consumable",
+        "Department": "Housekeeping",
+        "Class": "Unassigned Listing - CFL",
+        "WhoPays": "MC",
+        "ItemTagGroup": "GS-Paper Towels"
+      }},
+      {{
+        "Item": "Lavender Method",
+        "GLNumber": 7601,
+        "GLName": "Supplies - Guest Stay Consumable",
+        "Department": "Housekeeping",
+        "Class": "Unassigned Listing-CFL",
+        "WhoPays": "MC",
+        "ItemTagGroup": "GS-Kitchen Supplies (dish soap/detergent sponges)"
+      }},
+      {{
+        "Item": "Windex-under sink",
+        "GLNumber": 7601,
+        "GLName": "Supplies - Guest Stay Consumable",
+        "Department": "Housekeeping",
+        "Class": "Unassigned Listing-CFL",
+        "WhoPays": "MC",
+        "ItemTagGroup": "GS-Kitchen Supplies (dish soap/detergent sponges)"
+      }}
+    ];
+
+    const itemList = document.getElementById('itemList');
+    const summaryCard = document.getElementById('summaryCard');
+
+    function renderItems(filtered = items) {
+      itemList.innerHTML = '';
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerText = item.Item;
+        div.onclick = () => showSummary(item);
+        itemList.appendChild(div);
+      });
+    }
+
+    function showSummary(item) {
+      document.getElementById('summaryTitle').innerText = item.Item;
+      document.getElementById('glNumber').innerText = item.GLNumber;
+      document.getElementById('glName').innerText = item.GLName;
+      document.getElementById('department').innerText = item.Department;
+      document.getElementById('className').innerText = item.Class;
+      document.getElementById('whoPays').innerText = item.WhoPays;
+      document.getElementById('itemTag').innerText = item.ItemTagGroup;
+      summaryCard.style.display = 'block';
+    }
+
+    function filterItems() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const filtered = items.filter(item => item.Item.toLowerCase().includes(search));
+      renderItems(filtered);
+    }
+
+    // Initial render
+    renderItems();
+  </script>
+</body>
+</html>
