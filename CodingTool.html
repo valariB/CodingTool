@@ -15,7 +15,7 @@
       text-align: center;
     }
     .container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
     }
     input[type="text"] {
@@ -25,33 +25,30 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
-    .summary {
-      padding: 15px;
-      background-color: #fff;
-      border-radius: 6px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-    .summary h2 {
+    .card {
+      background-color: #fff;
+      padding: 12px 15px;
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+    }
+    .card h3 {
       margin-top: 0;
     }
-    .summary p {
-      margin: 6px 0;
+    .card p {
+      margin: 4px 0;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Brightwild GL Reference Tool</h1>
-    <input type="text" id="search" placeholder="Search item, GL #, or GL name..." onkeyup="filterAndShow()">
-    <div class="summary" id="summaryCard" style="display: none;">
-      <h2 id="summaryTitle"></h2>
-      <p><strong>GL #:</strong> <span id="glNumber"></span></p>
-      <p><strong>GL Name:</strong> <span id="glName"></span></p>
-      <p><strong>Department:</strong> <span id="department"></span></p>
-      <p><strong>Class:</strong> <span id="className"></span></p>
-      <p><strong>Item:</strong> <span id="itemFlag"></span></p>
-      <p><strong>Entity:</strong> <span id="entity"></span></p>
-    </div>
+    <input type="text" id="search" placeholder="Search by item, GL #, or GL name..." onkeyup="filterAndRender()">
+    <div class="results" id="resultsContainer"></div>
   </div>
 
   <script>
@@ -87,27 +84,36 @@
       { "Item": "Luggage Tags", "GLNumber": 1242, "GLName": "Accounts Receivable - Other", "Department": "Balance Sheet", "Class": "BKW COA - Common Area Reimb", "ItemFlag": "MC", "Entity": "BTO" }
     ];
 
-    function filterAndShow() {
+    function filterAndRender() {
       const search = document.getElementById('search').value.toLowerCase();
-      const match = items.find(item =>
+      const filtered = items.filter(item =>
         item.Item.toLowerCase().includes(search) ||
         String(item.GLNumber).includes(search) ||
         item.GLName.toLowerCase().includes(search)
       );
 
-      const card = document.getElementById('summaryCard');
-      if (match) {
-        document.getElementById('summaryTitle').innerText = match.Item;
-        document.getElementById('glNumber').innerText = match.GLNumber;
-        document.getElementById('glName').innerText = match.GLName;
-        document.getElementById('department').innerText = match.Department || '';
-        document.getElementById('className').innerText = match.Class || '';
-        document.getElementById('itemFlag').innerText = match.ItemFlag || '';
-        document.getElementById('entity').innerText = match.Entity || '';
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
+      const container = document.getElementById('resultsContainer');
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p>No matches found.</p>';
+        return;
       }
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <h3>${item.Item}</h3>
+          <p><strong>GL #:</strong> ${item.GLNumber}</p>
+          <p><strong>GL Name:</strong> ${item.GLName}</p>
+          <p><strong>Department:</strong> ${item.Department || ''}</p>
+          <p><strong>Class:</strong> ${item.Class || ''}</p>
+          <p><strong>Item:</strong> ${item.ItemFlag || ''}</p>
+          <p><strong>Entity:</strong> ${item.Entity || ''}</p>
+        `;
+        container.appendChild(div);
+      });
     }
   </script>
 </body>
