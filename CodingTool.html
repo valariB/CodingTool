@@ -42,7 +42,7 @@
 <body>
   <div class="container">
     <h1>Brightwild GL Reference Tool</h1>
-    <input type="text" id="search" placeholder="Search item or GL #" onkeyup="filterAndShow()">
+    <input type="text" id="search" placeholder="Search item, GL #, or GL name..." onkeyup="filterAndShow()">
     <div class="summary" id="summaryCard" style="display: none;">
       <h2 id="summaryTitle"></h2>
       <p><strong>GL #:</strong> <span id="glNumber"></span></p>
@@ -91,7 +91,8 @@
       const search = document.getElementById('search').value.toLowerCase();
       const match = items.find(item =>
         item.Item.toLowerCase().includes(search) ||
-        String(item.GLNumber).includes(search)
+        String(item.GLNumber).includes(search) ||
+        item.GLName.toLowerCase().includes(search)
       );
 
       const card = document.getElementById('summaryCard');
